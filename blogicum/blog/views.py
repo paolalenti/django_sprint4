@@ -38,13 +38,11 @@ def post_detail(request, id):
         category__is_published=True
     )
 
-    # Если пользователь аутентифицирован, добавляем условие проверки авторства
     if request.user.is_authenticated:
         conditions = base_conditions | Q(author=request.user)
     else:
         conditions = base_conditions
 
-    # Получаем пост с учетом условий
     post = get_object_or_404(
         Post.objects.select_related('category', 'location', 'author'),
         conditions,
@@ -183,8 +181,8 @@ class ProfileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Comment  # Добавьте явное указание модели
-    form_class = CommentForm  # Укажите форму
+    model = Comment
+    form_class = CommentForm
     pk_url_kwarg = 'comment_id'
     template_name = 'blog/comment.html'
 
